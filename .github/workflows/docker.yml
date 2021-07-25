@@ -21,15 +21,15 @@ jobs:
 
       - name: Docker login
         env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          ALIYUN_DOCKER_USERNAME: ${{ secrets.ALIYUN_DOCKER_USERNAME }}
+          ALIYUN_DOCKER_PASSWORD: ${{ secrets.ALIYUN_DOCKER_PASSWORD }}
         run: |
-          echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
+          echo "${ALIYUN_DOCKER_PASSWORD}" | docker login --username "${ALIYUN_DOCKER_USERNAME}" registry.cn-hongkong.aliyuncs.com --password-stdin
       
       - name: Docker buildx image and push on master branch
         if: github.ref == 'refs/heads/master'
         run: |
-          docker buildx build --output "type=image,push=true" --platform=linux/amd64,linux/arm/v7,linux/arm64,linux/386 --tag tindy2013/subconverter:latest scripts/
+          docker buildx build --output "type=image,push=true" --platform=linux/amd64,linux/arm/v7,linux/arm64,linux/386 --tag registry.cn-hongkong.aliyuncs.com/dianhsu/subconverter:latest scripts/
 
       - name: Replace tag without `v`
         if: startsWith(github.ref, 'refs/tags/')
@@ -43,5 +43,5 @@ jobs:
       - name: Docker buildx image and push on release
         if: startsWith(github.ref, 'refs/tags/')
         run: |
-          docker buildx build --output "type=image,push=true" --platform=linux/amd64,linux/arm/v7,linux/arm64,linux/386 --tag tindy2013/subconverter:${{steps.version.outputs.result}} scripts/
-          docker buildx build --output "type=image,push=true" --platform=linux/amd64,linux/arm/v7,linux/arm64,linux/386 --tag tindy2013/subconverter:latest scripts/
+          docker buildx build --output "type=image,push=true" --platform=linux/amd64,linux/arm/v7,linux/arm64,linux/386 --tag registry.cn-hongkong.aliyuncs.com/dianhsu/subconverter:${{steps.version.outputs.result}} scripts/
+          docker buildx build --output "type=image,push=true" --platform=linux/amd64,linux/arm/v7,linux/arm64,linux/386 --tag registry.cn-hongkong.aliyuncs.com/dianhsu/subconverter:latest scripts/
